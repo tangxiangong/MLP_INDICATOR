@@ -24,23 +24,15 @@ import torch.nn.functional as F
 class MLP(nn.Module):
     def __init__(self):
         super(MLP, self).__init__()
-        self.hidden_layer1 = nn.Linear(5, 256)
-        self.hidden_layer2 = nn.Linear(256, 128)
-        self.hidden_layer3 = nn.Linear(128, 64)
-        self.hidden_layer4 = nn.Linear(64, 32)
-        self.hidden_layer5 = nn.Linear(32, 16)
-        self.output_layer = nn.Linear(16, 2)
-        self.softmax = nn.Softmax(dim=1)
+        self.model = nn.Sequential(
+            nn.Linear(5, 256), nn.Linear(256, 128),
+            nn.Linear(128, 64), nn.Linear(64, 32),
+            nn.Linear(32, 16), nn.Linear(16, 2),
+            nn.Softmax(dim=1))
         self.size = self.__size()
 
     def forward(self, x):
-        out = F.relu(self.hidden_layer1(x))
-        out = F.relu(self.hidden_layer2(out))
-        out = F.relu(self.hidden_layer3(out))
-        out = F.relu(self.hidden_layer4(out))
-        out = F.relu(self.hidden_layer5(out))
-        out = self.output_layer(out)
-        out = self.softmax(out)
+        out = self.model(x)
         return out
 
     def __size(self):
