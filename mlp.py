@@ -18,24 +18,26 @@ An artificial neural network as a troubled-cell indicator
 """
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class MLP(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super(MLP, self).__init__()
         self.model = nn.Sequential(
-            nn.Linear(5, 256), nn.Linear(256, 128),
-            nn.Linear(128, 64), nn.Linear(64, 32),
-            nn.Linear(32, 16), nn.Linear(16, 2),
-            nn.Softmax(dim=1))
+            nn.Linear(5, 256), nn.ReLU(),
+            nn.Linear(256, 128), nn.ReLU(),
+            nn.Linear(128, 64), nn.ReLU(),
+            nn.Linear(64, 32), nn.ReLU(),
+            nn.Linear(32, 16), nn.ReLU(),
+            nn.Linear(16, 2), nn.Softmax(dim=1)
+        )
         self.size = self.__size()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.model(x)
         return out
 
-    def __size(self):
+    def __size(self) -> int:
         """
         返回网络的超参数数量
         """
